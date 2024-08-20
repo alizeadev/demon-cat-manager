@@ -90,7 +90,7 @@ public class Updates
     private static void UpdateAndRestart()
     {
         var downloadUrl =
-            "https://github.com/Ja-Sa-La/League-Account-Manager/releases/latest/download/League_Account_Manager.exe";
+            "https://github.com/alizeadev/demon-cat-manager/releases/latest/download/League_Account_Manager.exe";
         var downloadPath = Path.Combine(Environment.CurrentDirectory, "temp_update.exe");
         var currentExePath = Environment.ProcessPath;
         var backupExePath = currentExePath + ".backup";
