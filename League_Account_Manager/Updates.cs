@@ -12,13 +12,13 @@ namespace League_Account_Manager;
 
 public class Updates
 {
-    public static async void updatecheck()
+    public static async void UpdateCheck()
     {
         var updatecheck = new HttpClient();
         if (File.Exists(Path.Combine(Environment.CurrentDirectory, "temp_update.exe")))
         {
             File.Delete(Path.Combine(Environment.CurrentDirectory, "temp_update.exe"));
-            Thread.Sleep(500);
+            await Task.Delay(500);
             Notif.notificationManager.Show("Update!", "Demon Cat Manager was updated successfully",
                 NotificationType.Notification);
             LogManager.GetCurrentClassLogger().Info("File removed");
