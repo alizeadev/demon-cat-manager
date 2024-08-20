@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace League_Account_Manager;
 
-internal class lcu
+internal class Lcu
 {
     public static Vals Riot = new Vals { path = "", port = "", token = "", Value = "", version = null }; 
     public static Vals League = new Vals();
@@ -14,7 +14,7 @@ internal class lcu
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     private static extern nint FindWindow(string strClassName, string strWindowName);
 
-    public static async Task<(string RiotPort, string RiotToken, string LeaguePort, string LeagueToken)> GetClientInfo()
+    public static (string RiotPort, string RiotToken, string LeaguePort, string LeagueToken) GetClientInfo()
     {
         var ingame = Process.GetProcessesByName("League of Legends");
         if (ingame.Length != 0)

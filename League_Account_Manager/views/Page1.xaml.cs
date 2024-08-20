@@ -105,14 +105,14 @@ public partial class Page1 : Page
             var selectedrow = Championlist.SelectedItem as AccountList;
             if (selectedrow != null)
             {
-                var itemToRemove = ActualAccountlists.SingleOrDefault(r =>
+                var itemToRemove = ActualAccountlists?.SingleOrDefault(r =>
                     r.username == selectedrow.username && r.password == selectedrow.password &&
                     r.server == selectedrow.server);
                 if (itemToRemove != null)
-                    ActualAccountlists.Remove(itemToRemove);
+                    ActualAccountlists?.Remove(itemToRemove);
 
 
-                ActualAccountlists.RemoveAll(r => r.username == "username" && r.password == "password");
+                ActualAccountlists?.RemoveAll(r => r.username == "username" && r.password == "password");
 
                 using (var writer =
                        new StreamWriter(Directory.GetCurrentDirectory() + "\\" + Settings.settingsloaded.filename +
@@ -129,7 +129,7 @@ public partial class Page1 : Page
         }
     }
 
-    public async void ring()
+    public async void Ring()
     {
         running += 7;
         edistyy.Progress = running;
@@ -177,7 +177,7 @@ public partial class Page1 : Page
 
             if (!sameuser)
             {
-                killleaguefunc();
+                await KillLeague();
                 var RiotClient2 = Process.Start(Settings.settingsloaded.riotPath,
                     "--launch-product=league_of_legends --launch-patchline=live");
                 var num2 = 0;
@@ -254,7 +254,7 @@ public partial class Page1 : Page
                                 while (!signInElement2.IsEnabled) Thread.Sleep(500);
                                 signInElement2.Invoke();
                                 Thread.Sleep(1000);
-                                await lcu.Connector("riot", "post",
+                                await Lcu.Connector("riot", "post",
                                     "/product-launcher/v1/products/league_of_legends/patchlines/live", "");
                                 break;
                             }
@@ -288,29 +288,29 @@ public partial class Page1 : Page
 
             if (leagueclientprocess.Length == 0)
             {
-                notif.notificationManager.Show("Error", "League of Legends client is not running!",
+                Notif.notificationManager.Show("Error", "League of Legends client is not running!",
                     NotificationType.Notification,
-                    "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => notif.donothing(), "OK",
+                    "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
                     NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
                 return;
             }
             Progressgrid.Visibility = Visibility.Visible;
-            ring();
+            Ring();
 
             var summonerInfo = await GetSummonerInfoAsync();
-            ring();
+            Ring();
             var skinInfo = await GetSkinInfoAsync();
-            ring();
+            Ring();
             var champInfo = await GetChampionInfoAsync((string)summonerInfo["summonerId"]);
-            ring();
+            Ring();
             var lootInfo = await GetLootInfoAsync();
-            ring();
+            Ring();
             var rankedInfo = await GetRankedInfoAsync();
-            ring();
+            Ring();
             var wallet = await GetWalletAsync();
-            ring();
+            Ring();
             var region = await GetRegionAsync();
-            ring();
+            Ring();
 
             var skinlist = "";
             var skincount = 0;
@@ -332,7 +332,7 @@ public partial class Page1 : Page
                     skincount++;
                 }
 
-            ring();
+            Ring();
             foreach (var item in champInfo)
                 if ((bool)item["ownership"]["owned"])
                 {
@@ -340,12 +340,12 @@ public partial class Page1 : Page
                     champcount++;
                 }
 
-            ring();
+            Ring();
             foreach (var item in lootInfo)
             foreach (var thing in item)
                 if ((int)thing["count"] > 0)
                 {
-                    var resp = await lcu.Connector("league", "get", "/lol-loot/v1/player-loot/" + thing["lootId"], "");
+                    var resp = await Lcu.Connector("league", "get", "/lol-loot/v1/player-loot/" + thing["lootId"], "");
                     var responseBody = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
                     try
                     {
@@ -365,9 +365,9 @@ public partial class Page1 : Page
                     Lootcount++;
                 }
 
-            ring();
+            Ring();
             ActualAccountlists.RemoveAll(x => x.username == SelectedUsername);
-            ring();
+            Ring();
             ActualAccountlists.Add(new AccountList
             {
                 username = SelectedUsername,
@@ -386,7 +386,7 @@ public partial class Page1 : Page
                 Loots = Convert.ToInt32(Lootcount),
                 rank2 = Rank2
             });
-            ring();
+            Ring();
             using (var writer =
                    new StreamWriter(Directory.GetCurrentDirectory() + "\\" + Settings.settingsloaded.filename +
                                     ".csv"))
@@ -395,7 +395,7 @@ public partial class Page1 : Page
                 csv2.WriteRecords(ActualAccountlists);
             }
 
-            ring();
+            Ring();
             Progressgrid.Visibility = Visibility.Hidden;
             Championlist.ItemsSource = ActualAccountlists;
             Championlist.Items.SortDescriptions.Add(new SortDescription("level", ListSortDirection.Descending));
@@ -409,14 +409,14 @@ public partial class Page1 : Page
 
     private async Task<JObject> GetSummonerInfoAsync()
     {
-        var resp = await lcu.Connector("league", "get", "/lol-summoner/v1/current-summoner", "");
+        var resp = await Lcu.Connector("league", "get", "/lol-summoner/v1/current-summoner", "");
         var responseBody = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
         return JObject.Parse(responseBody);
     }
 
     private async Task<JArray> GetSkinInfoAsync()
     {
-        var resp = await lcu.Connector("league", "get", "/lol-catalog/v1/items/CHAMPION_SKIN", "");
+        var resp = await Lcu.Connector("league", "get", "/lol-catalog/v1/items/CHAMPION_SKIN", "");
         var responseBody = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
         return JArray.Parse(responseBody);
     }
@@ -428,12 +428,12 @@ public partial class Page1 : Page
             dynamic responseBody = "";
             try
             {
-                var resp = await lcu.Connector("league", "get",
+                var resp = await Lcu.Connector("league", "get",
                     $"/lol-champions/v1/inventories/{summonerId}/champions-minimal", "");
                 responseBody = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return JArray.Parse(responseBody);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 var jotain = JToken.Parse(responseBody);
                 if (jotain["errorCode"].ToString() != "RPC_ERROR")
@@ -446,14 +446,14 @@ public partial class Page1 : Page
 
     private async Task<JToken> GetLootInfoAsync()
     {
-        var resp = await lcu.Connector("league", "get", "/lol-loot/v1/player-loot-map", "");
+        var resp = await Lcu.Connector("league", "get", "/lol-loot/v1/player-loot-map", "");
         var responseBody = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
         return JToken.Parse(responseBody);
     }
 
     private async Task<JToken> GetRankedInfoAsync()
     {
-        var resp = await lcu.Connector("league", "get", "/lol-ranked/v1/current-ranked-stats", "");
+        var resp = await Lcu.Connector("league", "get", "/lol-ranked/v1/current-ranked-stats", "");
         var responseBody = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
         Console.WriteLine(JToken.Parse(responseBody));
         return JToken.Parse(responseBody);
@@ -461,7 +461,7 @@ public partial class Page1 : Page
 
     private async Task<Wallet> GetWalletAsync()
     {
-        var resp = await lcu.Connector("league", "get",
+        var resp = await Lcu.Connector("league", "get",
             "/lol-inventory/v1/wallet?currencyTypes=[%22RP%22,%22lol_blue_essence%22]", "");
         var responseBody = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
         var be = Convert.ToInt32(JToken.Parse(responseBody)["lol_blue_essence"]);
@@ -472,7 +472,7 @@ public partial class Page1 : Page
 
     private async Task<JToken> GetRegionAsync()
     {
-        var resp = await lcu.Connector("league", "get", "/riotclient/region-locale", "");
+        var resp = await Lcu.Connector("league", "get", "/riotclient/region-locale", "");
         var responseBody = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
         return JToken.Parse(responseBody);
     }
@@ -493,7 +493,7 @@ public partial class Page1 : Page
             }
 
 
-            killleaguefunc();
+            await KillLeague();
             Process[] leagueProcess;
             var num = 0;
             var RiotClient = Process.Start(Settings.settingsloaded.riotPath,
@@ -513,8 +513,7 @@ public partial class Page1 : Page
                     break;
                 }
 
-
-                Thread.Sleep(2000);
+                await Task.Delay(2000);
                 num++;
                 if (num == 5) return;
             }
@@ -570,7 +569,7 @@ public partial class Page1 : Page
                             while (!signInElement.IsEnabled) Thread.Sleep(200);
                             signInElement.Invoke();
                             Thread.Sleep(1000);
-                            await lcu.Connector("riot", "post",
+                            await Lcu.Connector("riot", "post",
                                 "/product-launcher/v1/products/league_of_legends/patchlines/live", "");
                             break;
                         }
@@ -622,7 +621,7 @@ public partial class Page1 : Page
         return false;
     }
 
-    public static void killleaguefunc()
+    public static async Task KillLeague()
     {
         try
         {
@@ -633,11 +632,6 @@ public partial class Page1 : Page
                 "LeagueClientUxRender", "LeagueClientUx", "LeagueClient"
             };
 
-            var allProcessesKilled = false;
-
-            while (!allProcessesKilled)
-            {
-                allProcessesKilled = true;
 
                 foreach (var processName in source)
                 {
@@ -646,14 +640,11 @@ public partial class Page1 : Page
                     foreach (var process in processes)
                     {
                         process.Kill();
-                        allProcessesKilled = false;
+                        await process.WaitForExitAsync();
+
                     }
                 }
-
-                if (!allProcessesKilled)
-                    // Wait for a moment before checking again
-                    Thread.Sleep(1000); // You can adjust the time interval if needed
-            }
+            
         }
         catch (Exception exception)
         {
@@ -661,9 +652,9 @@ public partial class Page1 : Page
         }
     }
 
-    private void killleague_Click(object sender, RoutedEventArgs e)
+    private async void killleague_Click(object sender, RoutedEventArgs e)
     {
-        killleaguefunc();
+        await KillLeague();
     }
 
     private async void openleague1_Click(object sender, RoutedEventArgs e)
@@ -672,7 +663,7 @@ public partial class Page1 : Page
         {
             var processesByName = Process.GetProcessesByName("Riot Client");
             var processesByName2 = Process.GetProcessesByName("LeagueClientUx");
-            killleaguefunc();
+            await KillLeague();
             if (!await CheckLeague()) throw new Exception("League not installed");
 
             openleague();
@@ -785,9 +776,9 @@ public partial class Page1 : Page
         catch (Exception exception)
         {
             if (OperatingSystem.IsWindowsVersionAtLeast(7))
-                notif.notificationManager.Show("Error", "An error occurred while loading the CSV file",
+                Notif.notificationManager.Show("Error", "An error occurred while loading the CSV file",
                     NotificationType.Notification,
-                    "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => notif.donothing(), "OK",
+                    "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
                     NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
             LogManager.GetCurrentClassLogger().Error(exception, "Error loading data");
         }
@@ -834,7 +825,7 @@ public partial class Page1 : Page
 
             await Task.Run(async () =>
             {
-                killleaguefunc();
+                await KillLeague();
                 Process[] leagueProcess;
                 var num = 0;
                 var RiotClient = Process.Start(Settings.settingsloaded.riotPath,
@@ -850,22 +841,22 @@ public partial class Page1 : Page
                     if (num == 5) return;
                 }
 
-                var resp = await lcu.Connector("riot", "post", "/rso-auth/v2/authorizations",
+                var resp = await Lcu.Connector("riot", "post", "/rso-auth/v2/authorizations",
                     "{\"clientId\":\"riot-client\",\"trustLevels\":[\"always_trusted\"]}");
                 var responseBody2 = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
-                resp = await lcu.Connector("riot", "put", "/rso-auth/v1/session/credentials",
+                resp = await Lcu.Connector("riot", "put", "/rso-auth/v1/session/credentials",
                     "{\"username\":\"" + SelectedUsername + "\",\"password\":\"" + SelectedPassword +
                     "\", \"persistLogin\":\"false\"}");
                 var responseBody1 = JObject.Parse(await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
                 if (responseBody1["error"] == "auth_failure")
                     Dispatcher.Invoke(() =>
                     {
-                        notif.notificationManager.Show("Error", "Account details are invalid",
+                        Notif.notificationManager.Show("Error", "Account details are invalid",
                             NotificationType.Notification,
-                            "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => notif.donothing(),
+                            "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(),
                             "OK", NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
                     });
-                resp = await lcu.Connector("riot", "post",
+                resp = await Lcu.Connector("riot", "post",
                     "/product-launcher/v1/products/league_of_legends/patchlines/live", "");
                 responseBody2 = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
             });

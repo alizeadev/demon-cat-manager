@@ -37,13 +37,13 @@ public partial class Window5 : Window
         Process.Start(Settings.settingsloaded.riotPath);
         if (tag == null)
         {
-            resp = await lcu.Connector("riot", "post", "/player-account/aliases/v1/aliases",
+            resp = await Lcu.Connector("riot", "post", "/player-account/aliases/v1/aliases",
                 "{\"gameName\":\"" + name + "\",\"tagLine\":\"\"}");
             body = JObject.Parse(await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
         }
         else
         {
-            resp = await lcu.Connector("riot", "post", "/player-account/aliases/v1/aliases",
+            resp = await Lcu.Connector("riot", "post", "/player-account/aliases/v1/aliases",
                 "{\"gameName\":\"" + name + "\",\"tagLine\":\"" + tag + "\"}");
             body = JObject.Parse(await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
         }

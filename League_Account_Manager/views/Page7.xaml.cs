@@ -7,7 +7,7 @@ using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 using NLog;
 using Notification.Wpf;
-using static League_Account_Manager.lcu;
+using static League_Account_Manager.Lcu;
 
 namespace League_Account_Manager.views;
 
@@ -49,12 +49,12 @@ public partial class Page7 : Page
         InitializeComponent();
     }
 
-    private void Button_Click(object sender, RoutedEventArgs e)
+    private async void Button_Click(object sender, RoutedEventArgs e)
     {
         try
         {
             var championsbought = "Files \n";
-            Page1.killleaguefunc();
+            await Page1.KillLeague();
             DeleteFilesAndFolders(list, championsbought);
         }
         catch (Exception exception)
@@ -116,8 +116,8 @@ public partial class Page7 : Page
                 var resp = await Connector("league", "get", "/lol-chat/v1/friends", "");
                 if (resp.ToString() == "0")
                 {
-                    notif.notificationManager.Show("Error", "League of legends client is not running!",
-                        NotificationType.Notification, "WindowArea", onClick: notif.donothing);
+                    Notif.notificationManager.Show("Error", "League of legends client is not running!",
+                        NotificationType.Notification, "WindowArea", onClick: Notif.donothing);
                     return;
                 }
 
@@ -145,8 +145,8 @@ public partial class Page7 : Page
         var resp = await Connector("league", "get", "/lol-chat/v1/friends", "");
         if (resp.ToString() == "0")
         {
-            notif.notificationManager.Show("Error", "League of legends client is not running!",
-                NotificationType.Notification, "WindowArea", onClick: notif.donothing);
+            Notif.notificationManager.Show("Error", "League of legends client is not running!",
+                NotificationType.Notification, "WindowArea", onClick: Notif.donothing);
             return;
         }
 
@@ -183,17 +183,17 @@ public partial class Page7 : Page
             }
     }
 
-    private void Button_Click_1(object sender, RoutedEventArgs e)
+    private async void Button_Click_1(object sender, RoutedEventArgs e)
     {
         try
         {
-            Page1.killleaguefunc();
+            await Page1.KillLeague();
             var installPath = (string)Registry.GetValue(
                 @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\Riot Game league_of_legends.live",
                 "UninstallString", null);
             if (installPath != null)
-                notif.notificationManager.Show("Error", "League of legends is not installed or missing registry keys",
-                    NotificationType.Notification, "WindowArea", onClick: notif.donothing);
+                Notif.notificationManager.Show("Error", "League of legends is not installed or missing registry keys",
+                    NotificationType.Notification, "WindowArea", onClick: Notif.donothing);
             var pattern = "\"(.*?)\"";
             var match = Regex.Match(installPath, pattern);
 
