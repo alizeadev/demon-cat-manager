@@ -31,7 +31,7 @@ public class Updates
 
         dynamic response =
             await updatecheck.GetAsync(
-                "https://raw.githubusercontent.com/Ja-Sa-La/League-Account-Manager/master/Version");
+                "https://raw.githubusercontent.com/alizeadev/demon-cat-manager/master/Version");
         var responseBody2 = JObject.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
         if (responseBody2["Version"] != Assembly.GetExecutingAssembly().GetName().Version.ToString())
         {
@@ -50,7 +50,7 @@ public class Updates
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = "https://github.com/Ja-Sa-La/League-Account-Manager/releases/latest",
+            FileName = "https://github.com/alizeadev/demon-cat-manager/releases/latest",
             UseShellExecute = true
         });
     }
