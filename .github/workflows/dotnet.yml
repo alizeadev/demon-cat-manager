@@ -26,7 +26,10 @@ jobs:
     - name: Build
       run: dotnet publish -c Release -o ./ -p:PublishReadyToRun=true -p:PublishSingleFile=true
     - name: Version
-      run: echo "VERSION=Get-Content -Path .\Version | ConvertFrom-Json | Select -ExpandProperty Version" >> $env:GITHUB_ENV
+      run: | 
+        $version = Get-Content -Path .\Version | ConvertFrom-Json | Select -ExpandProperty Version
+        echo "Version: ${version}"
+        echo "VERSION=${version}" >> $env:GITHUB_ENV
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
