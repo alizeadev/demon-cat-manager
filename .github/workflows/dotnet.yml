@@ -31,7 +31,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         name: Development Build-${{ env.SHORT_SHA }}
-        tag_name: ${{ env.SHORT_SHA }}
+        tag_name: dev-${{ env.SHORT_SHA }}
         prerelease: true
         generate_release_notes: true
         make_latest: "true"
