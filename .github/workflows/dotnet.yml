@@ -25,11 +25,13 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet publish -c Release -o ./ -p:PublishReadyToRun=true -p:PublishSingleFile=true
+    - name: Short SHA
+      run: echo "SHORT_SHA=$("${{ github.sha }}".SubString(0, 8))" >> $env:GITHUB_ENV
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         name: "Development Build"
-        tag_name: ${{ github.sha }}
+        tag_name: ${{ env.SHORT_SHA }}
         prerelease: true
         generate_release_notes: true
         make_latest: "true"
