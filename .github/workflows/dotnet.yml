@@ -27,8 +27,12 @@ jobs:
       run: dotnet publish -c Release -o ./ -p:PublishReadyToRun=true -p:PublishSingleFile=true
     - name: Release
       uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/')
       with:
+        name: "Development Build"
+        tag_name: ${{ github.sha }}
+        prerelease: true
+        generate_release_notes: true
+        make_latest: "true"
         files: League_Account_Manager.exe
         
     # - name: Test
