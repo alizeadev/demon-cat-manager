@@ -82,8 +82,8 @@ public partial class MainWindow : Window
             await Settings.loadsettings();
 
             // Perform update check if enabled in settings
-           // if (Settings.settingsloaded.updates)
-           //     Updates.UpdateCheck();
+            if (Settings.settingsloaded.updates)
+              Updates.UpdateCheck();
 
             Console.WriteLine(Settings.settingsloaded.LeaguePath);
             version.Content = "Version " + Assembly.GetExecutingAssembly().GetName().Version;
