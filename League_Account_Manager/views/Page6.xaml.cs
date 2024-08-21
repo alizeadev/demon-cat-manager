@@ -198,11 +198,11 @@ public partial class Page6 : Page
     private class PlayersData : INotifyPropertyChanged
     {
         private bool _report;
-        public string gameId { get; set; }
-        public string puuId { get; set; }
-        public string summonerId { get; set; }
-        public string riotID { get; set; }
-        public string reported { get; set; } = "no";
+        public string? gameId { get; set; }
+        public string? puuId { get; set; }
+        public string? summonerId { get; set; }
+        public string? riotID { get; set; }
+        public string? reported { get; set; } = "no";
 
         public bool report
         {
@@ -217,7 +217,7 @@ public partial class Page6 : Page
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {

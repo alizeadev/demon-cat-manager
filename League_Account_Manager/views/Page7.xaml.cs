@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 using NLog;
+using NLog.Targets;
 using Notification.Wpf;
 using static League_Account_Manager.Lcu;
 
@@ -116,7 +118,7 @@ public partial class Page7 : Page
                 var resp = await Connector("league", "get", "/lol-chat/v1/friends", "");
                 if (resp.ToString() == "0")
                 {
-                    Notif.notificationManager.Show("Error", "League of legends client is not running!",
+                    Notif.NotificationManager.Show("Error", "League of legends client is not running!",
                         NotificationType.Notification, "WindowArea", onClick: Notif.donothing);
                     return;
                 }
@@ -145,7 +147,7 @@ public partial class Page7 : Page
         var resp = await Connector("league", "get", "/lol-chat/v1/friends", "");
         if (resp.ToString() == "0")
         {
-            Notif.notificationManager.Show("Error", "League of legends client is not running!",
+            Notif.NotificationManager.Show("Error", "League of legends client is not running!",
                 NotificationType.Notification, "WindowArea", onClick: Notif.donothing);
             return;
         }
@@ -188,23 +190,36 @@ public partial class Page7 : Page
         try
         {
             await Page1.KillLeague();
-            var installPath = (string)Registry.GetValue(
-                @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\Riot Game league_of_legends.live",
-                "UninstallString", null);
-            if (installPath != null)
-                Notif.notificationManager.Show("Error", "League of legends is not installed or missing registry keys",
-                    NotificationType.Notification, "WindowArea", onClick: Notif.donothing);
-            var pattern = "\"(.*?)\"";
-            var match = Regex.Match(installPath, pattern);
 
-            if (match.Success)
+            // TODO: macos?
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var pathInQuotes = match.Groups[1].Value;
+                var installPath = (string?)Registry.GetValue(
+                        @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\Riot Game league_of_legends.live",
+                        "UninstallString", null);
+                if (installPath != null)
+                    Notif.NotificationManager.Show("Error", "League of legends is not installed or missing registry keys",
+                        NotificationType.Notification, "WindowArea", onClick: Notif.donothing);
+                var pattern = "\"(.*?)\"";
 
-                // Extract arguments after the double quotes
-                var arguments = installPath.Substring(match.Length).Trim();
-                Process.Start(pathInQuotes, arguments);
+                // TODO: do something when install path is null (does happen)
+                if (installPath is not null)
+                {
+                    var match = Regex.Match(installPath, pattern);
+                    if (match.Success)
+                    {
+                        var pathInQuotes = match.Groups[1].Value;
+
+                        // Extract arguments after the double quotes
+                        var arguments = installPath.Substring(match.Length).Trim();
+                        Process.Start(pathInQuotes, arguments);
+                    }
+                }
             }
+
+
+
+
             //Console.Writeline("No match found.");
         }
         catch (Exception exception)

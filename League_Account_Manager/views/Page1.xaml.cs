@@ -288,7 +288,7 @@ public partial class Page1 : Page
 
             if (leagueclientprocess.Length == 0)
             {
-                Notif.notificationManager.Show("Error", "League of Legends client is not running!",
+                Notif.NotificationManager.Show("Error", "League of Legends client is not running!",
                     NotificationType.Notification,
                     "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
                     NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
@@ -776,7 +776,7 @@ public partial class Page1 : Page
         catch (Exception exception)
         {
             if (OperatingSystem.IsWindowsVersionAtLeast(7))
-                Notif.notificationManager.Show("Error", "An error occurred while loading the CSV file",
+                Notif.NotificationManager.Show("Error", "An error occurred while loading the CSV file",
                     NotificationType.Notification,
                     "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
                     NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
@@ -851,7 +851,7 @@ public partial class Page1 : Page
                 if (responseBody1["error"] == "auth_failure")
                     Dispatcher.Invoke(() =>
                     {
-                        Notif.notificationManager.Show("Error", "Account details are invalid",
+                        Notif.NotificationManager.Show("Error", "Account details are invalid",
                             NotificationType.Notification,
                             "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(),
                             "OK", NotificationTextTrimType.NoTrim, 2U, true, null, null, false);

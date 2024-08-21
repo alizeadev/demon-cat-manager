@@ -337,7 +337,7 @@ public partial class Page10 : Page
                 if (champselectaction != null && champselectaction.ContainsKey("type") &&
                     champselectaction["type"].ToString() == "ban")
                 {
-                    Task.Delay(1000, ct);
+                    await Task.Delay(1000, ct);
                     var resp = await Lcu.Connector("league", "patch",
                         "/lol-champ-select/v1/session/actions/" + champselectaction["id"],
                         "{\"completed\":true,\"championId\":" + await getbanchampid() + "}");

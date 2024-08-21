@@ -12,7 +12,7 @@ namespace League_Account_Manager;
 
 public class Notif
 {
-    public static NotificationManager notificationManager = new();
+    public static NotificationManager NotificationManager = new();
 
     public static void donothing()
     {
@@ -93,7 +93,7 @@ public partial class MainWindow : Window
         catch (Exception e)
         {
             logger.Error(e, "An error occurred during initialization");
-            Notif.notificationManager.Show(new NotificationContent
+            Notif.NotificationManager.Show(new NotificationContent
             {
                 Title = "Error",
                 Message = "An error occurred during initialization",

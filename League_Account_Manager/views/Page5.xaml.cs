@@ -42,7 +42,7 @@ public partial class Page5 : Page
                     ",\"purchasable\":true},\"source\":\"cdp\",\"quantity\":1}]}");
                 if (val.ToString() == "0")
                 {
-                    Notif.notificationManager.Show("Error", "League of legends client is not running!",
+                    Notif.NotificationManager.Show("Error", "League of legends client is not running!",
                         NotificationType.Notification, "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null,
                         () => Notif.donothing(), "OK", NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
                     return;

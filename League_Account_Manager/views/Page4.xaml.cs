@@ -165,7 +165,7 @@ public partial class Page4 : Page
         catch (Exception exception)
         {
             LogManager.GetCurrentClassLogger().Error(exception, "Error");
-            Notif.notificationManager.Show("Error", "Error occurred! make sure you pulled data",
+            Notif.NotificationManager.Show("Error", "Error occurred! make sure you pulled data",
                 NotificationType.Notification,
                 "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
                 NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
@@ -185,7 +185,7 @@ public partial class Page4 : Page
         catch (Exception exception)
         {
             LogManager.GetCurrentClassLogger().Error(exception, "Error");
-            Notif.notificationManager.Show("Error", "Error occurred! make sure you pulled data",
+            Notif.NotificationManager.Show("Error", "Error occurred! make sure you pulled data",
                 NotificationType.Notification, "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null,
                 () => Notif.donothing(), "OK", NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
         }

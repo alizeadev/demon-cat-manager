@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -35,7 +36,10 @@ internal class Lcu
                 try
                 {
                     ProcessCommandLine.Retrieve(ritoprocess, out var value);
-                    SetRiotValues(ritoprocess, value);
+                    if(value is not null)
+                    {
+                        SetRiotValues(ritoprocess, value);
+                    }
                     if (Riot.port[1].ToString() != "2")
                     {
                         portSplit = Riot.port.Split("=");
@@ -52,7 +56,11 @@ internal class Lcu
         else if (leagueClientProcess != null)
         {
             ProcessCommandLine.Retrieve(leagueClientProcess, out var value);
-            SetRiotValues(leagueClientProcess, value, true);
+            // TODO: do something when its null
+            if (value is not null)
+            {
+                SetRiotValues(leagueClientProcess, value, true);
+            }
             portSplit = Riot.port.Split("=");
             tokenSplit = Riot.token.Split("=");
             riotPort = portSplit[1];
@@ -66,7 +74,11 @@ internal class Lcu
                 try
                 {
                     ProcessCommandLine.Retrieve(leagueprocess, out var value);
-                    SetLeagueValues(leagueprocess, value);
+                    // TODO: do something when its null
+                    if(value is not null)
+                    {
+                        SetLeagueValues(leagueprocess, value);
+                    }
                     portSplit = League.port.Split("=");
                     tokenSplit = League.token.Split("=");
                     leaguePort = portSplit[1];
@@ -107,7 +119,11 @@ internal class Lcu
                     try
                     {
                         ProcessCommandLine.Retrieve(ritoprocess, out var value);
-                        SetRiotValues(ritoprocess, value);
+                        //TODO: do something when its null
+                        if(value is not null)
+                        {
+                            SetRiotValues(ritoprocess, value);
+                        }
                         if (Riot.port[1].ToString() != "2")
                             break;
                     }
@@ -118,7 +134,11 @@ internal class Lcu
             else if (leagueClientProcess != null)
             {
                 ProcessCommandLine.Retrieve(leagueClientProcess, out var value);
-                SetRiotValues(leagueClientProcess, value, true);
+                // TODO: do something when its null
+                if(value is not null)
+                {
+                    SetRiotValues(leagueClientProcess, value, true);
+                }
             }
             else
             {
@@ -167,7 +187,11 @@ internal class Lcu
         League.Value = value;
         League.port = showMatch(League.Value, "--app-port=(\\d*)");
         League.token = showMatch(League.Value, "--remoting-auth-token=([\\w-]*)");
-        League.path = process.MainModule.FileName;
+        // TODO: do something when its null
+        if(process.MainModule is not null)
+        {
+            League.path = process.MainModule.FileName;
+        }
         League.version = FileVersionInfo.GetVersionInfo(League.path);
     }
 
@@ -277,12 +301,12 @@ public static class ProcessCommandLine
     }
 
 
-    public static int Retrieve(Process process, out string commandLine)
+    public static int Retrieve(Process process, out string? commandLine)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             var rc = 0;
-        commandLine = null;
+            commandLine = null;
         var hProcess = Win32Native.OpenProcess(
             Win32Native.OpenProcessDesiredAccessFlags.PROCESS_QUERY_INFORMATION |
             Win32Native.OpenProcessDesiredAccessFlags.PROCESS_VM_READ, false, (uint)process.Id);

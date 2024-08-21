@@ -43,7 +43,7 @@ public partial class Page8 : Page
             }
             catch (Exception e)
             {
-                Notif.notificationManager.Show("Error",
+                Notif.NotificationManager.Show("Error",
                     "League of Legends client is not running! waiting 5 seconds to try again",
                     NotificationType.Notification,
                     "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
@@ -58,7 +58,7 @@ public partial class Page8 : Page
         var leagueclientprocess = Process.GetProcessesByName("LeagueClientUx");
         if (leagueclientprocess.Length == 0)
         {
-            Notif.notificationManager.Show("Error", "League of Legends client is not running!",
+            Notif.NotificationManager.Show("Error", "League of Legends client is not running!",
                 NotificationType.Notification,
                 "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
                 NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
