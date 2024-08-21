@@ -25,13 +25,13 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet publish -c Release -o ./ -p:PublishReadyToRun=true -p:PublishSingleFile=true
-    - name: Short SHA
-      run: echo "SHORT_SHA=$("${{ github.sha }}".SubString(0, 8))" >> $env:GITHUB_ENV
+    - name: Version
+      run: $env:VERSION = Get-Content -Path .\Version | ConvertFrom-Json | Select -ExpandProperty Version
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
-        name: Development Build-${{ env.SHORT_SHA }}
-        tag_name: dev-${{ env.SHORT_SHA }}
+        name: Development Build-${{ env.VERSION }}
+        tag_name: dev-${{ env.VERSION }}
         prerelease: true
         generate_release_notes: true
         make_latest: "true"
