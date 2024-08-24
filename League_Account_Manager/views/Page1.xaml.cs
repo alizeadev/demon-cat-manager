@@ -275,25 +275,17 @@ public partial class Page1 : Page
         }
         try
         {
-
-            var leagueclientprocess = Process.GetProcessesByName("LeagueClientUx");
-            var i = 0;
-
             while (true)
             {
-                if (leagueclientprocess.Length != 0)
+                if (Process.GetProcessesByName("LeagueClientUx").Length != 0)
                     break;
+
+                await Task.Delay(2000);
             }
+
+
             await Task.Delay(5000);
 
-            if (leagueclientprocess.Length == 0)
-            {
-                Notif.NotificationManager.Show("Error", "League of Legends client is not running!",
-                    NotificationType.Notification,
-                    "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
-                    NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
-                return;
-            }
             Progressgrid.Visibility = Visibility.Visible;
             Ring();
 
