@@ -34,7 +34,7 @@ public partial class Page1 : Page
     public Page1()
     {
         InitializeComponent();
-        loaddata();
+        LoadData();
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), $"{Settings.settingsloaded.filename}.csv");
         fileWatcher = new FileSystemWatcher
         {
@@ -52,15 +52,15 @@ public partial class Page1 : Page
     private async void OnChanged(object source, FileSystemEventArgs e)
     {
 
-            await loaddata();
+            await LoadData();
             Dispatcher.Invoke(() =>
             {
             Championlist.Items.SortDescriptions.Add(new SortDescription("level", ListSortDirection.Descending));
             });
     }
 
-
-    public async Task loaddata()
+    // ur fucking RETARDED FOR MAKING IT LOWER CASED
+    public async Task LoadData()
     {
         try
         {
@@ -198,7 +198,7 @@ public partial class Page1 : Page
                     }
 
 
-                    Thread.Sleep(2000);
+                    await Task.Delay(2000);
                     num2++;
                     if (num2 == 5) return;
                 }
@@ -251,21 +251,21 @@ public partial class Page1 : Page
                             passwordField2.Text = SelectedPassword;
                             if (signInElement2 != null)
                             {
-                                while (!signInElement2.IsEnabled) Thread.Sleep(500);
+                                while (!signInElement2.IsEnabled) await Task.Delay(500);
                                 signInElement2.Invoke();
-                                Thread.Sleep(1000);
+                                await Task.Delay(1000);
                                 await Lcu.Connector("riot", "post",
                                     "/product-launcher/v1/products/league_of_legends/patchlines/live", "");
                                 break;
                             }
 
-                            Thread.Sleep(1000);
+                            await Task.Delay(1000);
                         }
                     }
                     catch (Exception ex)
                     {
-                        //Console.Writeline(ex);
-                        Thread.Sleep(200);
+                        Console.WriteLine(ex);
+                        await Task.Delay(200);
                     }
             }
         }
@@ -284,7 +284,7 @@ public partial class Page1 : Page
                 if (leagueclientprocess.Length != 0)
                     break;
             }
-            Thread.Sleep(5000);
+            await Task.Delay(5000);
 
             if (leagueclientprocess.Length == 0)
             {
@@ -566,21 +566,21 @@ public partial class Page1 : Page
                         passwordField.Text = SelectedPassword;
                         if (signInElement != null)
                         {
-                            while (!signInElement.IsEnabled) Thread.Sleep(200);
+                            while (!signInElement.IsEnabled) await Task.Delay(200);
                             signInElement.Invoke();
-                            Thread.Sleep(1000);
+                            await Task.Delay(1000);
                             await Lcu.Connector("riot", "post",
                                 "/product-launcher/v1/products/league_of_legends/patchlines/live", "");
                             break;
                         }
 
-                        Thread.Sleep(1000);
+                            await Task.Delay(1000);
                     }
                 }
                 catch (Exception ex)
                 {
                     //Console.Writeline(ex);
-                    Thread.Sleep(200);
+                    await Task.Delay(200);
                 }
         }
         catch (Exception exception)
@@ -836,7 +836,7 @@ public partial class Page1 : Page
                     if (Process.GetProcessesByName("Riot Client").Length != 0 ||
                         Process.GetProcessesByName("RiotClientUx").Length != 0)
                         break;
-                    Thread.Sleep(2000);
+                    await Task.Delay(2000);
                     num++;
                     if (num == 5) return;
                 }

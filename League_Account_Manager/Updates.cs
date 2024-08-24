@@ -29,9 +29,7 @@ public class Updates
             NoCache = true
         };
 
-        dynamic response =
-            await updatecheck.GetAsync(
-                "https://raw.githubusercontent.com/alizeadev/demon-cat-manager/master/Version");
+        dynamic response = await updatecheck.GetAsync("https://raw.githubusercontent.com/alizeadev/demon-cat-manager/master/Version");
         var responseBody2 = JObject.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
         if (responseBody2["Version"] != Assembly.GetExecutingAssembly().GetName().Version?.ToString())
         {
@@ -89,8 +87,7 @@ public class Updates
 
     private async static void UpdateAndRestart()
     {
-        var downloadUrl =
-            "https://github.com/alizeadev/demon-cat-manager/releases/latest/download/League_Account_Manager.exe";
+        var downloadUrl = "https://github.com/alizeadev/demon-cat-manager/releases/latest/download/League_Account_Manager.exe";
         var downloadPath = Path.Combine(Environment.CurrentDirectory, "temp_update.exe");
         var currentExePath = Environment.ProcessPath;
         var backupExePath = currentExePath + ".backup";

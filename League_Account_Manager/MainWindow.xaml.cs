@@ -10,6 +10,11 @@ using LogLevel = NLog.LogLevel;
 
 namespace League_Account_Manager;
 
+
+/// <summary>
+/// HAVE SOME RESPECT WITH NULLS
+/// also using dynamic will result in performance issues im pretty sure
+/// </summary>
 public class Notif
 {
     public static NotificationManager NotificationManager = new();
@@ -47,7 +52,7 @@ public partial class MainWindow : Window
                     Console.WriteLine(e);
                 }
 
-                Thread.Sleep(30000);
+                await Task.Delay(30000);
             }
         });
     }

@@ -158,7 +158,11 @@ internal class Lcu
                 try
                 {
                     ProcessCommandLine.Retrieve(leagueprocess, out var value);
-                    SetLeagueValues(leagueprocess, value);
+                    // TODO: handle null
+                    if(value is not null)
+                    {
+                        SetLeagueValues(leagueprocess, value);
+                    }
                     portSplit = League.port.Split("=");
                     tokenSplit = League.token.Split("=");
                     token = Encoding.UTF8.GetBytes("riot:" + tokenSplit[1]);
