@@ -49,6 +49,9 @@
         <ui:NavigationView Grid.Row="1" OpenPaneLength="175" IsBackButtonVisible="Collapsed" MinWidth="50"
                            x:Name="RootNavigation" Grid.Column="0" Loaded="RootNavigation_OnLoaded">
             <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItemHeader Text="League of Legends" FontSize="15" Margin="0">
+                
+                </ui:NavigationViewItemHeader>
                 <ui:NavigationViewItem NavigationCacheMode="Required" Content="Dashboard" TargetPageTag="home"
                                        TargetPageType="{x:Type Page:Page1}">
                     <ui:NavigationViewItem.Icon>
@@ -95,6 +98,31 @@
                                        TargetPageType="{x:Type Page:Page9}">
                     <ui:NavigationViewItem.Icon>
                         <ui:SymbolIcon Symbol="ShoppingBag20" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItemSeparator>
+                </ui:NavigationViewItemSeparator>
+                <ui:NavigationViewItemHeader Text="Valorant" FontSize="15" Margin="0">
+                
+                </ui:NavigationViewItemHeader>
+                <ui:NavigationViewItem Content="LOW ELO">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="AppGeneric20" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="LOW ELO">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="AppGeneric20" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="LOW ELO">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="AppGeneric20" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="LOW ELO">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="AppGeneric20" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>

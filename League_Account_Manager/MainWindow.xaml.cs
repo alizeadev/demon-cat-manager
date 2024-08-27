@@ -31,7 +31,9 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        //AllocConsole();
+#if DEBUG
+        AllocConsole();
+#endif
         InitializeLogging();
         InitializeUI();
         Task.Run(async () =>
