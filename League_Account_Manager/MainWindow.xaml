@@ -49,9 +49,6 @@
         <ui:NavigationView Grid.Row="1" OpenPaneLength="175" IsBackButtonVisible="Collapsed" MinWidth="50"
                            x:Name="RootNavigation" Grid.Column="0" Loaded="RootNavigation_OnLoaded">
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItemHeader Text="Riot Games" FontSize="15" Margin="0">
-
-                </ui:NavigationViewItemHeader>
                 <ui:NavigationViewItem NavigationCacheMode="Required" Content="Dashboard" TargetPageTag="home"
                                        TargetPageType="{x:Type Page:Page1}">
                     <ui:NavigationViewItem.Icon>
@@ -63,9 +60,12 @@
                         <ui:SymbolIcon Symbol="AddSquareMultiple20" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItemHeader Text="League of Legends" FontSize="15" Margin="0">
+                <ui:NavigationViewItemSeparator></ui:NavigationViewItemSeparator>
+                <ui:NavigationViewItemHeader Text="League of Legends" FontSize="15" Margin="0" HorizontalAlignment="Center">
 
                 </ui:NavigationViewItemHeader>
+                <ui:NavigationViewItemSeparator></ui:NavigationViewItemSeparator>
+
                 <ui:NavigationViewItem Content="Champion select" TargetPageType="{x:Type Page:Page4}">
                     <ui:NavigationViewItem.Icon>
                         <ui:SymbolIcon Symbol="Group20" />
@@ -103,9 +103,13 @@
                         <ui:SymbolIcon Symbol="ShoppingBag20" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItemHeader Text="Valorant" FontSize="15" Margin="0">
+                <ui:NavigationViewItemSeparator></ui:NavigationViewItemSeparator>
+
+                <ui:NavigationViewItemHeader Text="Valorant" FontSize="15" Margin="0" HorizontalAlignment="Center">
                 
                 </ui:NavigationViewItemHeader>
+                <ui:NavigationViewItemSeparator></ui:NavigationViewItemSeparator>
+
                 <ui:NavigationViewItem Content="LOW ELO">
                     <ui:NavigationViewItem.Icon>
                         <ui:SymbolIcon Symbol="AppGeneric20" />
