@@ -49,6 +49,14 @@
         <ui:NavigationView Grid.Row="1" OpenPaneLength="175" IsBackButtonVisible="Collapsed" MinWidth="50"
                            x:Name="RootNavigation" Grid.Column="0" Loaded="RootNavigation_OnLoaded">
             <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItemHeader Text="Riot" FontSize="15" Margin="0">
+
+                </ui:NavigationViewItemHeader>
+                <ui:NavigationViewItem Content="Add accounts" TargetPageType="{x:Type Page:Page2}">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="AddSquareMultiple20" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
                 <ui:NavigationViewItemHeader Text="League of Legends" FontSize="15" Margin="0">
                 
                 </ui:NavigationViewItemHeader>
@@ -56,11 +64,6 @@
                                        TargetPageType="{x:Type Page:Page1}">
                     <ui:NavigationViewItem.Icon>
                         <ui:SymbolIcon Symbol="Home20" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-                <ui:NavigationViewItem Content="Add accounts" TargetPageType="{x:Type Page:Page2}">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:SymbolIcon Symbol="AddSquareMultiple20" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
                 <ui:NavigationViewItem Content="Champion select" TargetPageType="{x:Type Page:Page4}">
