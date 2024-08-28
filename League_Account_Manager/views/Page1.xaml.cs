@@ -469,6 +469,118 @@ public partial class Page1 : Page
         return JToken.Parse(responseBody);
     }
 
+    private async void Valo_login(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (!await CheckLeague()) throw new Exception("League not installed");
+            var i = 0;
+            DataGridCellInfo cellinfo;
+            foreach (var row in Championlist.SelectedCells)
+            {
+                if (i == 0)
+                    SelectedUsername = (row.Column.GetCellContent(row.Item) as TextBlock).Text;
+                else if (i == 1) SelectedPassword = (row.Column.GetCellContent(row.Item) as TextBlock).Text;
+                i++;
+            }
+
+
+            await KillLeague();
+            Process[] leagueProcess;
+            var num = 0;
+            var RiotClient = Process.Start(Settings.settingsloaded.riotPath,
+                "--launch-product=valorant --launch-patchline=live");
+            var riotval = string.Empty;
+            while (true)
+            {
+                if (Process.GetProcessesByName("Riot Client").Length != 0)
+                {
+                    riotval = "Riot Client";
+                    break;
+                }
+
+                if (Process.GetProcessesByName("RiotClientUx").Length != 0)
+                {
+                    riotval = "RiotClientUx";
+                    break;
+                }
+
+                await Task.Delay(2000);
+                num++;
+                if (num == 5) return;
+            }
+
+            while (true)
+                try
+                {
+                    var app = Application.Attach(riotval);
+
+                    using (var automation = new UIA3Automation())
+                    {
+                        AutomationElement window = app.GetMainWindow(automation);
+                        var riotcontent =
+                            window.FindFirstDescendant(cf => cf.ByClassName("Chrome_RenderWidgetHostHWND"));
+
+
+                        var usernameField = riotcontent.FindFirstDescendant(cf => cf.ByAutomationId("username"))
+                            .AsTextBox();
+                        if (usernameField == null) throw new Exception("Username field not found");
+
+
+                        // Find the password field
+                        var passwordField = riotcontent.FindFirstDescendant(cf => cf.ByAutomationId("password"))
+                            .AsTextBox();
+                        if (passwordField == null) throw new Exception("Password field not found");
+
+
+                        var checkbox = riotcontent.FindFirstDescendant(cf => cf.ByControlType(ControlType.CheckBox));
+                        if (riotcontent == null) throw new Exception("Riot content not found");
+                        if (checkbox == null) throw new Exception("Checkbox field not found");
+
+                        var siblings = riotcontent.FindAllChildren();
+                        if (checkbox.Parent == null) throw new Exception("Checkbox parent not found");
+                        //Console.Writeline(siblings.Length);
+                        var count = Array.IndexOf(siblings, checkbox) + 1;
+                        if (siblings.Length <= count) throw new Exception("Not enough siblings found for the checkbox");
+                        dynamic signInElement = null;
+                        while (siblings.Length >= count)
+                        {
+                            signInElement = siblings[count++].AsButton();
+
+                            //Console.Writeline($"Found checkbox: {checkbox.Name}");
+                            //Console.Writeline($"Found siblings count: {siblings.Length}");
+
+                            if (signInElement.ControlType != ControlType.Button) continue;
+                            break;
+                        }
+
+                        usernameField.Text = SelectedUsername;
+                        passwordField.Text = SelectedPassword;
+                        if (signInElement != null)
+                        {
+                            while (!signInElement.IsEnabled) await Task.Delay(200);
+                            signInElement.Invoke();
+                            await Task.Delay(1000);
+                            await Lcu.Connector("riot", "post",
+                                "/product-launcher/v1/products/valorant/patchlines/live", "");
+                            break;
+                        }
+
+                        await Task.Delay(1000);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Console.Writeline(ex);
+                    await Task.Delay(200);
+                }
+        }
+        catch (Exception exception)
+        {
+            LogManager.GetCurrentClassLogger().Error(exception, "Error loading data");
+        }
+    }
+
     private async void Button_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -800,65 +912,6 @@ public partial class Page1 : Page
 
         return input.Replace("\"", "");
     }
-
-    private async void Login_Copy_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var i = 0;
-            DataGridCellInfo cellinfo;
-            foreach (var row in Championlist.SelectedCells)
-            {
-                if (i == 0)
-                    SelectedUsername = (row.Column.GetCellContent(row.Item) as TextBlock).Text;
-                else if (i == 1) SelectedPassword = (row.Column.GetCellContent(row.Item) as TextBlock).Text;
-                i++;
-            }
-
-            await Task.Run(async () =>
-            {
-                await KillLeague();
-                Process[] leagueProcess;
-                var num = 0;
-                var RiotClient = Process.Start(Settings.settingsloaded.riotPath,
-                    "--launch-product=league_of_legends --launch-patchline=live");
-
-                while (true)
-                {
-                    if (Process.GetProcessesByName("Riot Client").Length != 0 ||
-                        Process.GetProcessesByName("RiotClientUx").Length != 0)
-                        break;
-                    await Task.Delay(2000);
-                    num++;
-                    if (num == 5) return;
-                }
-
-                var resp = await Lcu.Connector("riot", "post", "/rso-auth/v2/authorizations",
-                    "{\"clientId\":\"riot-client\",\"trustLevels\":[\"always_trusted\"]}");
-                var responseBody2 = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
-                resp = await Lcu.Connector("riot", "put", "/rso-auth/v1/session/credentials",
-                    "{\"username\":\"" + SelectedUsername + "\",\"password\":\"" + SelectedPassword +
-                    "\", \"persistLogin\":\"false\"}");
-                var responseBody1 = JObject.Parse(await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
-                if (responseBody1["error"] == "auth_failure")
-                    Dispatcher.Invoke(() =>
-                    {
-                        Notif.NotificationManager.Show("Error", "Account details are invalid",
-                            NotificationType.Notification,
-                            "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(),
-                            "OK", NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
-                    });
-                resp = await Lcu.Connector("riot", "post",
-                    "/product-launcher/v1/products/league_of_legends/patchlines/live", "");
-                responseBody2 = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
-            });
-        }
-        catch (Exception exception)
-        {
-            LogManager.GetCurrentClassLogger().Error(exception, "Error logging in");
-        }
-    }
-
 
     private async void Championlist_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
