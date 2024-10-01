@@ -558,9 +558,9 @@ public partial class Page1 : Page
                         passwordField.Text = SelectedPassword;
                         if (signInElement != null)
                         {
-                            while (!signInElement.IsEnabled) await Task.Delay(200);
+                            while (!signInElement.IsEnabled) await Task.Delay(500);
                             signInElement.Invoke();
-                            await Task.Delay(1000);
+                            await Task.Delay(4000);
                             await Lcu.Connector("riot", "post",
                                 "/product-launcher/v1/products/valorant/patchlines/live", "");
                             break;
