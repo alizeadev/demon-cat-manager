@@ -310,10 +310,10 @@ public partial class Page1 : Page
             var champcount = 0;
             var Lootlist = "";
             var Lootcount = 0;
-            var Rank = string.IsNullOrEmpty(rankedInfo["queueMap"]["RANKED_SOLO_5x5"]["tier"].ToString()) ? "Unranked" : rankedInfo["queueMap"]["RANKED_SOLO_5x5"]["tier"] + " " + rankedInfo["queueMap"]["RANKED_SOLO_5x5"]["division"] + ", " +
+            var Rank = string.IsNullOrEmpty(rankedInfo["queueMap"]["RANKED_SOLO_5x5"]["tier"].ToString()) ? "Unranked" : rankedInfo["queueMap"]["RANKED_SOLO_5x5"]["tier"] + " " + rankedInfo["queueMap"]["RANKED_SOLO_5x5"]["division"] + " " + rankedInfo["queueMap"]["RANKED_SOLO_5x5"]["leaguePoints"] + " LP, " + 
                        rankedInfo["queueMap"]["RANKED_SOLO_5x5"]["wins"] + " Wins, " +
                        rankedInfo["queueMap"]["RANKED_SOLO_5x5"]["losses"] + " Losses";
-            var Rank2 = string.IsNullOrEmpty(rankedInfo["queueMap"]["RANKED_FLEX_SR"]["tier"].ToString()) ? "Unranked" : rankedInfo["queueMap"]["RANKED_FLEX_SR"]["tier"] + " " +  rankedInfo["queueMap"]["RANKED_FLEX_SR"]["division"]  + ", " +
+            var Rank2 = string.IsNullOrEmpty(rankedInfo["queueMap"]["RANKED_FLEX_SR"]["tier"].ToString()) ? "Unranked" : rankedInfo["queueMap"]["RANKED_FLEX_SR"]["tier"] + " " + rankedInfo["queueMap"]["RANKED_FLEX_SR"]["division"] + " " + rankedInfo["queueMap"]["RANKED_FLEX_SR"]["leaguePoints"] + " LP, " +
                        rankedInfo["queueMap"]["RANKED_FLEX_SR"]["wins"] + " Wins, " +
                        rankedInfo["queueMap"]["RANKED_FLEX_SR"]["losses"] + " Losses";
 
@@ -355,9 +355,10 @@ public partial class Page1 : Page
                     }
 
                     Lootcount++;
-                }
+                    }
 
             Ring();
+            AccountList note = ActualAccountlists.FindLast(x => x.username == SelectedUsername);
             ActualAccountlists.RemoveAll(x => x.username == SelectedUsername);
             Ring();
             ActualAccountlists.Add(new AccountList
@@ -376,7 +377,8 @@ public partial class Page1 : Page
                 Skins = Convert.ToInt32(skincount),
                 Loot = Lootlist,
                 Loots = Convert.ToInt32(Lootcount),
-                rank2 = Rank2
+                rank2 = Rank2,
+                note = note.note
             });
             Ring();
             using (var writer =
@@ -870,7 +872,8 @@ public partial class Page1 : Page
                         Loot = values.Length > 12 ? values[12] : "",
                         Loots = values.Length > 13 && !string.IsNullOrEmpty(values[13])
                             ? Convert.ToInt32(values[13].Replace("\"", "").Replace("\'", ""))
-                            : 0
+                            : 0,
+                        note = values.Length > 15 ? values[15] : "",
                     };
 
                     records.Add(record);
@@ -903,6 +906,7 @@ public partial class Page1 : Page
             account.skins = RemoveDoubleQuotes(account.skins);
             account.Loot = RemoveDoubleQuotes(account.Loot);
             account.rank2 = RemoveDoubleQuotes(account.rank2);
+            account.note = RemoveDoubleQuotes(account.note);
         }
     }
 
@@ -932,6 +936,7 @@ public partial class Page1 : Page
                         if (selectedrow == null) return;
                         if (header == null) return;
                         Window4? secondWindow = null;
+                        Window6? noteWindow = null;
 
                         switch (header)
                         {
@@ -941,6 +946,9 @@ public partial class Page1 : Page
                             case "Skins":
                                 secondWindow = new Window4(selectedrow.skins);
                                 break;
+                            case "Notes":
+                                noteWindow = new Window6(selectedrow);
+                                break;
                             case "Loot":
                                 secondWindow = new Window4(selectedrow.Loot);
                                 break;
@@ -948,7 +956,7 @@ public partial class Page1 : Page
                                 var url = $"https:/www.op.gg/summoners/{RegionHelperUtil.RegionParser(selectedrow.server)}/{selectedrow.riotID.Replace("#", "-")}";
                                 OpenUrl(url);
                                 break;
-                                    
+
                         }
 
                         if (secondWindow != null)
@@ -956,6 +964,11 @@ public partial class Page1 : Page
                             await secondWindow.Dispatcher.InvokeAsync(() => { secondWindow.Show(); });
 
                             while (secondWindow.IsLoaded) await Task.Delay(100);
+                        }
+                        else
+                        {
+                            await noteWindow.Dispatcher.InvokeAsync(() => { noteWindow.Show(); });
+                            while (noteWindow.IsLoaded) await Task.Delay(100);
                         }
                     }
 
@@ -993,7 +1006,7 @@ public partial class Page1 : Page
 
     private async void SecondaryClient_OnClick(object sender, RoutedEventArgs e)
     {
-        Process.Start(Settings.settingsloaded.LeaguePath, "--allow-multiple-clients");
+        Process.Start(Settings.settingsloaded.riotPath, "--launch-product=league_of_legends --launch-patchline=live --allow-multiple-clients");
     }
 
     private void OpenUrl(string url)
@@ -1018,6 +1031,7 @@ public partial class Page1 : Page
         public string? Loot { get; set; }
         public int Loots { get; set; }
         public string? rank2 { get; set; }
+        public string? note { get; set; }
     }
 
     public class Wallet
