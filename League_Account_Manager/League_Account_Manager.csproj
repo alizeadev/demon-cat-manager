@@ -7,15 +7,15 @@
 	  <Nullable>enable</Nullable>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <UseWPF>True</UseWPF>
-	  <ApplicationIcon>favicon.ico</ApplicationIcon>
 	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	  <SelfContained>false</SelfContained>
 	  <PublishSingleFile>true</PublishSingleFile>
+	  <ApplicationIcon>Flux_Dev_A_stylized_League_of_Legends_themed_letter_L_logo_in__1.ico</ApplicationIcon>
 	  <ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 
   <ItemGroup>
-    <Content Include="favicon.ico" />
+    <Content Include="Flux_Dev_A_stylized_League_of_Legends_themed_letter_L_logo_in__1.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +45,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>AssemblyInfo.tt</DependentUpon>
     </Compile>
+    <Compile Update="Resource1.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

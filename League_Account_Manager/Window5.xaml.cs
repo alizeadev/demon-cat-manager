@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Input;
 using CsvHelper;
 using Newtonsoft.Json.Linq;
+using NLog;
+using Notification.Wpf;
 
 namespace League_Account_Manager;
 
@@ -33,38 +35,51 @@ public partial class Window5 : Window
 
     private async void Button_Click(object sender, RoutedEventArgs e)
     {
-        var name = Nameholder.Text;
-        var tag = Tagline.Text;
-        HttpResponseMessage resp = null;
-        JObject body = null;
-        Process.Start(Settings.settingsloaded.riotPath);
-        if (tag == null)
+        try
         {
-            resp = await Lcu.Connector("riot", "post", "/player-account/aliases/v1/aliases",
-                "{\"gameName\":\"" + name + "\",\"tagLine\":\"\"}");
-            body = JObject.Parse(await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
-        }
-        else
-        {
-            resp = await Lcu.Connector("riot", "post", "/player-account/aliases/v1/aliases",
-                "{\"gameName\":\"" + name + "\",\"tagLine\":\"" + tag + "\"}");
-            body = JObject.Parse(await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
-        }
+            var name = Nameholder.Text;
+            var tag = Tagline.Text;
+            HttpResponseMessage resp = null;
+            JObject body = null;
+            Process.Start(Settings.settingsloaded.riotPath);
+            if (tag == null)
+            {
+                resp = await Lcu.Connector("riot", "post", "/player-account/aliases/v1/aliases",
+                    "{\"gameName\":\"" + name + "\",\"tagLine\":\"\"}");
+                body = JObject.Parse(await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
+            }
+            else
+            {
+                resp = await Lcu.Connector("riot", "post", "/player-account/aliases/v1/aliases",
+                    "{\"gameName\":\"" + name + "\",\"tagLine\":\"" + tag + "\"}");
+                body = JObject.Parse(await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
+            }
 
-        if ((bool)body["isSuccess"])
-        {
-            errormessage.Content = "Namechange was succesful!";
-            errormessage.Visibility = Visibility.Visible;
+            if ((bool)body["isSuccess"])
+            {
+                errormessage.Content = "Namechange was succesful!";
+                errormessage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                errormessage.Content = $"{body["errorCode"]} {body["errorMessage"]}";
+                errormessage.Visibility = Visibility.Visible;
+            }
         }
-        else
+        catch (Exception exception)
         {
-            errormessage.Content = $"{body["errorCode"]} {body["errorMessage"]}";
-            errormessage.Visibility = Visibility.Visible;
+            if (OperatingSystem.IsWindowsVersionAtLeast(7))
+                Notif.NotificationManager.Show("Error", "Riot Client not running",
+                    NotificationType.Notification,
+                    "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
+                    NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
+            LogManager.GetCurrentClassLogger().Error(exception, "Error loading data");
         }
     }
     private async void Button_Click_2(object sender, RoutedEventArgs e)
     {
-
+        try
+        {
         var name = Nameholder.Text;
         var tag = Tagline.Text;
         HttpResponseMessage resp = null;
@@ -89,8 +104,18 @@ public partial class Window5 : Window
         }
         else
         {
-            errormessage.Content = $"{body["errorCode"]} {body["errorMessage"]}";
-            errormessage.Visibility = Visibility.Visible;
+                errormessage.Content = $"{body["invalidReason"]}";
+                errormessage.Visibility = Visibility.Visible;
+        }
+    }
+        catch (Exception exception)
+        {
+            if (OperatingSystem.IsWindowsVersionAtLeast(7))
+                Notif.NotificationManager.Show("Error", "Riot Client not running",
+                    NotificationType.Notification,
+                    "WindowArea", TimeSpan.FromSeconds(10), null, null, null, null, () => Notif.donothing(), "OK",
+                    NotificationTextTrimType.NoTrim, 2U, true, null, null, false);
+            LogManager.GetCurrentClassLogger().Error(exception, "Error loading data");
         }
     }
 }

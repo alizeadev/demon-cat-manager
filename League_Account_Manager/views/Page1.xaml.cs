@@ -598,7 +598,6 @@ public partial class Page1 : Page
                 i++;
             }
 
-
             await KillLeague();
             Process[] leagueProcess;
             var num = 0;

@@ -18,7 +18,7 @@
                   Height="713" VerticalAlignment="Top">
             <DataGrid.Columns>
                 <DataGridTextColumn MaxWidth="220" Header="Username" Width="*" Binding="{Binding username}"/>
-                <DataGridTextColumn MaxWidth="250" Header="Password" Width="*" Binding="{Binding password}"/>
+                <DataGridTextColumn MaxWidth="0" Foreground="Transparent" Header="" Binding="{Binding password}"/>
                 <DataGridTextColumn MaxWidth="250" Header="RiotID" Width="*" Binding="{Binding riotID}"/>
                 <DataGridTextColumn MinWidth="50" Header="Level" Binding="{Binding level}"/>
                 <DataGridTextColumn MinWidth="50" Header="Server" Binding="{Binding server}"/>

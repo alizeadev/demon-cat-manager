@@ -1,12 +1,20 @@
 ﻿using System.Diagnostics;
+using System.Media;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Forms.PropertyGridInternal;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 using Notification.Wpf;
+using static FlaUI.Core.FrameworkAutomationElementBase;
 using LogLevel = NLog.LogLevel;
+using System.Resources;
+using System.IO;
+using System;
+using System.Numerics;
 
 namespace League_Account_Manager;
 
@@ -90,12 +98,14 @@ public partial class MainWindow : Window
 
             // Perform update check if enabled in settings
             if (Settings.settingsloaded.updates)
-              Updates.UpdateCheck();
+                Updates.UpdateCheck();
 
             Console.WriteLine(Settings.settingsloaded.LeaguePath);
             version.Content = "Version " + Assembly.GetExecutingAssembly().GetName().Version;
             installloc.Content = Settings.settingsloaded.riotPath;
             installloclea.Content = Settings.settingsloaded.LeaguePath;
+
+
         }
         catch (Exception e)
         {
@@ -108,6 +118,18 @@ public partial class MainWindow : Window
             });
             Environment.Exit(1); // Exit the application on critical error
         }
+    }
+
+    private void toggle_on(object sender, RoutedEventArgs e)
+    {
+        System.Media.SoundPlayer player = new System.Media.SoundPlayer(Resource1._new);
+        player.Play();
+
+    }
+    private void toggle_off(object sender, RoutedEventArgs e)
+    {
+        System.Media.SoundPlayer player = new System.Media.SoundPlayer(Resource1._new);
+        player.Stop();
     }
 
     private bool IsUpdateProcess()
